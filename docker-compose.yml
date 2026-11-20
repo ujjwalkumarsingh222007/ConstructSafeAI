@@ -1,0 +1,122 @@
+version: '3.8'
+
+services:
+  # =========================================================================
+  # MongoDB Community Edition (Version 7.0)
+  # =========================================================================
+  mongodb:
+    image: mongo:7.0
+    container_name: constructsafe_mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_DATABASE: ${MONGODB_DB_NAME:-constructsafe_db}
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --eval 'db.runCommand(\"ping\").ok' --quiet || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - constructsafe_net
+
+  # =========================================================================
+  # Redis Cache & Message Broker
+  # =========================================================================
+  redis:
+    image: redis:7-alpine
+    container_name: constructsafe_redis
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - constructsafe_net
+
+  # =========================================================================
+  # FastAPI Application Backend
+  # =========================================================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: constructsafe_backend
+    restart: unless-stopped
+    environment:
+      ENVIRONMENT: ${ENVIRONMENT:-development}
+      DEBUG: ${DEBUG:-true}
+      MONGODB_URL: mongodb://mongodb:27017
+      MONGODB_DB_NAME: ${MONGODB_DB_NAME:-constructsafe_db}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      JWT_SECRET: ${JWT_SECRET:-change_in_production_jwt_secret_key_512bit}
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    volumes:
+      - ./backend:/app
+      - storage_data:/app/storage
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - constructsafe_net
+
+  # =========================================================================
+  # React + Vite Frontend
+  # =========================================================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: constructsafe_frontend
+    restart: unless-stopped
+    ports:
+      - "${FRONTEND_PORT:-3000}:80"
+    depends_on:
+      - backend
+    networks:
+      - constructsafe_net
+
+  # =========================================================================
+  # Dedicated AI Computer Vision Microservice
+  # =========================================================================
+  ai_engine:
+    build:
+      context: ./ai_engine
+      dockerfile: Dockerfile
+    container_name: constructsafe_ai_engine
+    restart: unless-stopped
+    environment:
+      ENVIRONMENT: ${ENVIRONMENT:-development}
+      BACKEND_URL: http://backend:8000/api/v1
+    ports:
+      - "${AI_ENGINE_PORT:-8001}:8001"
+    volumes:
+      - ./ai_engine:/app
+      - storage_data:/app/storage
+    networks:
+      - constructsafe_net
+
+volumes:
+  mongodb_data:
+    name: constructsafe_mongodb_data
+  redis_data:
+    name: constructsafe_redis_data
+  storage_data:
+    name: constructsafe_storage_data
+
+networks:
+  constructsafe_net:
+    name: constructsafe_network
+    driver: bridge

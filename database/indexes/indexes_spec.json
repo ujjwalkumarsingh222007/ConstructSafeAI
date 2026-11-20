@@ -1,0 +1,73 @@
+{
+  "database": "constructsafe_db",
+  "collections": [
+    {
+      "name": "users",
+      "indexes": [
+        {"keys": {"email": 1}, "options": {"unique": true}},
+        {"keys": {"role_name": 1}, "options": {}},
+        {"keys": {"status": 1}, "options": {}}
+      ]
+    },
+    {
+      "name": "projects",
+      "indexes": [
+        {"keys": {"project_code": 1}, "options": {"unique": true}},
+        {"keys": {"status": 1}, "options": {}},
+        {"keys": {"project_manager_id": 1}, "options": {}},
+        {"keys": {"safety_inspector_id": 1}, "options": {}},
+        {"keys": {"client_id": 1}, "options": {}}
+      ]
+    },
+    {
+      "name": "workers",
+      "indexes": [
+        {"keys": {"employee_id": 1}, "options": {"unique": true}},
+        {"keys": {"assigned_project_id": 1}, "options": {}},
+        {"keys": {"status": 1}, "options": {}}
+      ]
+    },
+    {
+      "name": "hazard_reports",
+      "indexes": [
+        {"keys": {"report_number": 1}, "options": {"unique": true}},
+        {"keys": {"project_id": 1, "status": 1}, "options": {}},
+        {"keys": {"created_at": -1}, "options": {}},
+        {"keys": {"reporter_id": 1}, "options": {}}
+      ]
+    },
+    {
+      "name": "corrective_actions",
+      "indexes": [
+        {"keys": {"action_number": 1}, "options": {"unique": true}},
+        {"keys": {"hazard_report_id": 1}, "options": {"unique": true, "sparse": true}},
+        {"keys": {"project_id": 1, "status": 1}, "options": {}},
+        {"keys": {"assigned_to_id": 1}, "options": {}}
+      ]
+    },
+    {
+      "name": "inspections",
+      "indexes": [
+        {"keys": {"inspection_number": 1}, "options": {"unique": true}},
+        {"keys": {"project_id": 1, "status": 1}, "options": {}},
+        {"keys": {"inspector_id": 1}, "options": {}}
+      ]
+    },
+    {
+      "name": "incidents",
+      "indexes": [
+        {"keys": {"incident_number": 1}, "options": {"unique": true}},
+        {"keys": {"project_id": 1, "status": 1}, "options": {}},
+        {"keys": {"severity": 1}, "options": {}}
+      ]
+    },
+    {
+      "name": "refresh_tokens",
+      "indexes": [
+        {"keys": {"token": 1}, "options": {"unique": true}},
+        {"keys": {"family_id": 1}, "options": {}},
+        {"keys": {"expires_at": 1}, "options": {"expireAfterSeconds": 0}}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Lato', sans-serif;
+    background-color: #FBFBFB;
+    color: #040404;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 700;
+    color: #040404;
+    letter-spacing: -0.02em;
+  }
+}
+
+/* Visionex Component Utility Classes */
+.btn-primary {
+  @apply inline-flex items-center justify-center px-5 py-2.5 rounded-xl font-bold text-sm bg-[#FFDD00] text-[#121926] hover:bg-[#E6C700] transition-all shadow-sm cursor-pointer;
+}
+
+.btn-dark {
+  @apply inline-flex items-center justify-center px-5 py-2.5 rounded-xl font-bold text-sm bg-[#121926] text-white hover:bg-[#1E293B] transition-all shadow-sm cursor-pointer;
+}
+
+.btn-outline {
+  @apply inline-flex items-center justify-center px-5 py-2.5 rounded-xl font-semibold text-sm bg-white text-[#121926] border border-[#EAEAEA] hover:bg-[#FBFBFB] transition-all shadow-sm cursor-pointer;
+}
+
+.card-vx {
+  @apply bg-white rounded-xl border border-[#EAEAEA] shadow-sm p-6;
+}
+
+/* Custom Clean Scrollbar for Visionex UI */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #FBFBFB;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #EAEAEA;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #CBD5E1;
+}
