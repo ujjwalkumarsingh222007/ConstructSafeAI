@@ -170,8 +170,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ userName }) => {
 
           <button
             type="button"
-            onClick={() => navigate('/workers')}
-            className="p-5 rounded-2xl bg-white hover:bg-[#FBFBFB] border border-[#EAEAEA] hover:border-[#121926] text-left transition-all shadow-xs flex items-center justify-between group"
+            onClick={() => navigate('/admin/users')}
+            className="p-5 rounded-2xl bg-white hover:bg-[#FBFBFB] border border-[#EAEAEA] hover:border-[#121926] text-left transition-all shadow-xs flex items-center justify-between group cursor-pointer"
           >
             <div>
               <div className="w-8 h-8 rounded-lg bg-[#121926] text-white flex items-center justify-center mb-2">

@@ -20,5 +20,6 @@ export const ROUTES = {
   REPORTS: '/reports',
   NOTIFICATIONS: '/notifications',
   PROFILE: '/profile',
+  ADMIN_USERS: '/admin/users',
   SETTINGS: '/settings'
 } as const;

@@ -26,6 +26,7 @@ const HazardReviewQueuePage = React.lazy(() => import('./pages/hazards/HazardRev
 const ReportsPage = React.lazy(() => import('./pages/ReportsPage').then((m) => ({ default: m.ReportsPage })));
 const NotificationsPage = React.lazy(() => import('./pages/NotificationsPage').then((m) => ({ default: m.NotificationsPage })));
 const ProfilePage = React.lazy(() => import('./pages/ProfilePage').then((m) => ({ default: m.ProfilePage })));
+const AdminUsersPage = React.lazy(() => import('./pages/admin/AdminUsersPage').then((m) => ({ default: m.AdminUsersPage })));
 
 const PageLoadingFallback: React.FC = () => (
   <div className="flex h-64 w-full items-center justify-center text-slate-500">
@@ -99,6 +100,16 @@ export const App: React.FC = () => {
               {/* User Center: Real-time Notifications & Role-Based Profile */}
               <Route path="/notifications" element={<NotificationsPage />} />
               <Route path="/profile" element={<ProfilePage />} />
+
+              {/* Admin Console: User & Access Management */}
+              <Route
+                path="/admin/users"
+                element={
+                  <ProtectedRoute allowedRoles={['admin', 'super_admin']}>
+                    <AdminUsersPage />
+                  </ProtectedRoute>
+                }
+              />
 
               <Route
                 path="/settings"

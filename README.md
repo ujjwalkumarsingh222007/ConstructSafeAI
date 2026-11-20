@@ -70,6 +70,7 @@ In the construction sector, **1 in 5 workplace fatalities** occur globally (OSHA
   - Interactive Recharts visualization (safety trends, severity distributions, project comparisons)
   - Cryptographic-grade PDF safety digests via **ReportLab**
   - Multi-tab compliance registers exported in Excel via **OpenPyXL**
+- **🔑 Admin User & Account Management Console:** Complete administrative governance console to provision and manage account credentials (email IDs, passwords, phone numbers) for Site Workers, Safety Inspectors, Project Managers, and Client Representatives with granular project assignments, password resets, active/inactive toggles, and automatic worker directory synchronization.
 - **🎨 Visionex Astro UI:** Clean, distraction-free aesthetic with #121926 Dark Navy, #FFDD00 Safety Yellow, and #FBFBFB surface colors.
 
 ---
@@ -211,10 +212,10 @@ construction_project/
    ```
 4. Start the FastAPI server:
    ```bash
-   uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
+   uvicorn app.main:app --host 127.0.0.1 --port 8001 --reload
    ```
-   - **API Base:** [http://127.0.0.1:8000](http://127.0.0.1:8000)
-   - **Interactive Swagger Docs:** [http://127.0.0.1:8000/api/v1/docs](http://127.0.0.1:8000/api/v1/docs)
+   - **API Base:** [http://127.0.0.1:8000](http://127.0.0.1:8001)
+   - **Interactive Swagger Docs:** [http://127.0.0.1:8001/api/v1/docs](http://127.0.0.1:8001/api/v1/docs)
 
 ---
 

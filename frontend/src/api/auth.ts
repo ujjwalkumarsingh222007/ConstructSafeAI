@@ -24,6 +24,40 @@ export interface LoginResponse {
   tokens: TokenResponse;
 }
 
+export interface AdminUserDetail {
+  id: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  role_name: string;
+  phone?: string;
+  assigned_project_ids: string[];
+  assigned_project_names: string[];
+  is_active: boolean;
+  last_login_at?: string;
+  created_at?: string;
+  employee_id?: string;
+  trade?: string;
+}
+
+export interface AdminCreateUserPayload {
+  email: string;
+  password: string;
+  first_name: string;
+  last_name: string;
+  role_name: string;
+  phone?: string;
+  assigned_project_ids?: string[];
+  trade?: string;
+  employee_id?: string;
+}
+
+export interface AdminUserListResponse {
+  success: boolean;
+  total: number;
+  users: AdminUserDetail[];
+}
+
 export const authApi = {
   async login(email: string, password: string): Promise<LoginResponse> {
     const response = await apiClient.post<LoginResponse>('/auth/login', { email, password });
@@ -57,6 +91,26 @@ export const authApi = {
 
   async testRoleEndpoint(endpoint: string): Promise<{ success: boolean; message: string; role: string }> {
     const response = await apiClient.get(`/auth/${endpoint}`);
+    return response.data;
+  },
+
+  async getUsers(params?: { role?: string; search?: string }): Promise<AdminUserListResponse> {
+    const response = await apiClient.get<AdminUserListResponse>('/auth/users', { params });
+    return response.data;
+  },
+
+  async createUser(data: AdminCreateUserPayload): Promise<AdminUserDetail> {
+    const response = await apiClient.post<AdminUserDetail>('/auth/users', data);
+    return response.data;
+  },
+
+  async toggleUserStatus(userId: string, isActive: boolean): Promise<{ success: boolean; message: string; is_active: boolean }> {
+    const response = await apiClient.patch<{ success: boolean; message: string; is_active: boolean }>(`/auth/users/${userId}/status`, { is_active: isActive });
+    return response.data;
+  },
+
+  async resetUserPassword(userId: string, newPassword: string): Promise<{ success: boolean; message: string }> {
+    const response = await apiClient.post<{ success: boolean; message: string }>(`/auth/users/${userId}/reset-password`, { new_password: newPassword });
     return response.data;
   }
 };

@@ -48,7 +48,14 @@ type SidebarItem =
 export const Sidebar: React.FC = () => {
   const { user, logout } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
-  const [safetyOpen, setSafetyOpen] = useState(true);
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({
+    Safety: true,
+    Administration: true,
+  });
+
+  const toggleGroup = (groupName: string) => {
+    setOpenGroups((prev) => ({ ...prev, [groupName]: !prev[groupName] }));
+  };
 
   const role = user?.role_name || 'admin';
 
@@ -74,7 +81,17 @@ export const Sidebar: React.FC = () => {
             }
           },
           { type: 'link', item: { name: 'Reports', to: '/reports', icon: BarChart3 } },
-          { type: 'link', item: { name: 'Administration', to: '/workers', icon: Users } },
+          {
+            type: 'group',
+            group: {
+              name: 'Administration',
+              icon: Users,
+              items: [
+                { name: 'User Accounts', to: '/admin/users', badge: 'Admin' },
+                { name: 'Worker Directory', to: '/workers' }
+              ]
+            }
+          },
           { type: 'link', item: { name: 'Notifications', to: '/notifications', icon: Bell } },
           { type: 'link', item: { name: 'Profile', to: '/profile', icon: UserCheck } }
         ];
@@ -250,11 +267,13 @@ export const Sidebar: React.FC = () => {
             );
           }
 
+          const isOpen = openGroups[group.name] ?? true;
+
           return (
             <div key={idx} className="pt-2">
               <button
                 type="button"
-                onClick={() => setSafetyOpen(!safetyOpen)}
+                onClick={() => toggleGroup(group.name)}
                 className="w-full flex items-center justify-between px-3.5 py-2 text-xs font-bold text-slate-400 hover:text-white transition-colors uppercase tracking-wider text-[11px]"
               >
                 <div className="flex items-center gap-2.5">
@@ -263,12 +282,12 @@ export const Sidebar: React.FC = () => {
                 </div>
                 <ChevronDown
                   className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                    safetyOpen ? 'rotate-180 text-[#FFDD00]' : 'text-slate-500'
+                    isOpen ? 'rotate-180 text-[#FFDD00]' : 'text-slate-500'
                   }`}
                 />
               </button>
 
-              {safetyOpen && (
+              {isOpen && (
                 <div className="mt-1 space-y-1 pl-3 border-l-2 border-slate-800 ml-4">
                   {group.items.map((sub, sIdx) => (
                     <NavLink
